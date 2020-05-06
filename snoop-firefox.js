@@ -1,3 +1,5 @@
+console.log("Snoop is running on this page");
+
 // initializing selector as empty
 if (!window.CurrentSelection) {
     CurrentSelection = {}
@@ -20,6 +22,24 @@ CurrentSelection.Selector.getSelected = function () {
 function mouseUpSelected(){
     var st = CurrentSelection.Selector.getSelected();
     var range = st.getRangeAt(0)
+
+    // transferring range to a new node
+    var newNode = document.createElement("span");
+    newNode.setAttribute("class", "selectedText");
+    range.surroundContents(newNode);
+
+    var residual = document.getElementById('popDiv');
+    if(residual)
+        residual.remove()
+
+    // initializing popup
+    var popDiv = document.createElement('span');
+    popDiv.setAttribute('id', 'popDiv')
+    popDiv.setAttribute('class', 'popDiv');
+
+    if (newNode.innerHTML.length > 0){
+        newNode.appendChild(popDiv);
+    }
 
     var selectedText = range.toString();
     if (selectedText && selectedText != " "){
@@ -63,10 +83,24 @@ function loadHTTPResponse(response, queryText){
             dict.push([type, meaning])
         })
 
+        
         createPopup(queryText, pronounciation, dict);
     }
 }
 
 function createPopup(queryText, pronounciation, dict){
-    return
+    if (window.getSelection) {
+        window.getSelection().removeAllRanges();
+    } else if (document.selection){ 
+        document.selection.empty();
+    }
+
+    console.log(queryText, dict);
+
+    var popDiv = document.getElementById('popDiv');
+    popDiv.style.visibility = "visible"
+    popDiv.setAttribute('style', 
+        'display: inline; min-height: 10vh; width: 20vw; position:absolute; background-color: #000; color: #fff')
+
+    popDiv.innerHTML = queryText + dict[0] + dict[1];
 }
