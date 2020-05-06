@@ -1,39 +1,3 @@
-// API request
-function loadHTTPResponse(responseText){
-    responseText = JSON.parse(responseText)
-    console.log(responseText)
-
-    if(responseText['def'].length > 0){
-        var def = responseText['def'][0]
-        var word = def['text']
-        var ts = def['ts']
-        var pos = def['pos']
-        var meanings = []
-        def['tr'].forEach(function(m){
-            meanings.push(m['text'])
-        })
-        
-        console.log("word:", word);
-        console.log("pronounciation:", ts);
-        console.log("type:", pos);
-        console.log("meaning:", meanings);
-    }
-}
-
-function loadDoc(queryText) {
-    queryText = queryText.trim();
-    var xmlHttp = new XMLHttpRequest();
-    xmlHttp.onreadystatechange = function() { 
-        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            loadHTTPResponse(xmlHttp.responseText);
-    }
-    xmlHttp.open("GET", 
-            'https://dictionary.yandex.net/api/v1/dicservice.json/lookup?key=dict.1.1.20200506T094355Z.ccb2803e85479f25.ccc11cffc54d99e1d85717daa418d073c234c8d9&lang=en-en&text='+queryText,
-            true); // true for asynchronous 
-
-    xmlHttp.send(null);
-}
-
 // initializing selector as empty
 if (!window.CurrentSelection) {
     CurrentSelection = {}
@@ -56,13 +20,9 @@ CurrentSelection.Selector.getSelected = function () {
 function mouseUpSelected(){
     var st = CurrentSelection.Selector.getSelected();
     var range = st.getRangeAt(0)
-    var newNode = document.createElement("span");
-    // newNode.setAttribute("class", "selectedText");
-    range.surroundContents(newNode);
 
-    var selectedText = newNode.innerText
+    var selectedText = range.toString();
     if (selectedText && selectedText != " "){
-        console.log(selectedText)
         return selectedText
     }
     else{
@@ -72,10 +32,41 @@ function mouseUpSelected(){
 
 // event listener
 document.addEventListener("mouseup", function(){
-    let body = document.getElementsByTagName('body');
-    console.log("Here");
-    
     var selectedText = mouseUpSelected();
     if(selectedText)
         loadDoc(selectedText);
 });
+
+function loadDoc(queryText) {
+    queryText = queryText.trim();
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            loadHTTPResponse(xmlHttp.responseText, queryText);
+    }
+    xmlHttp.open("GET", 
+            'https://www.dictionaryapi.com/api/v3/references/collegiate/json/' +  queryText +'?key=e58fc628-83c4-433c-a9fc-82b34cb12366',
+            true); // true for asynchronous 
+
+    xmlHttp.send(null);
+}
+
+// API response processing and popup creation
+function loadHTTPResponse(response, queryText){
+    response = JSON.parse(response)
+    
+    if(response[0].fl){
+        var pronounciation = response[0].hwi.prs[0].mw;
+        var dict = [];
+        response.forEach(function(r){
+            var type = r.fl, meaning = r.shortdef[0];
+            dict.push([type, meaning])
+        })
+
+        createPopup(queryText, pronounciation, dict);
+    }
+}
+
+function createPopup(queryText, pronounciation, dict){
+    return
+}
