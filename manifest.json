@@ -1,0 +1,19 @@
+{
+    "manifest version": 1,
+    "name": "Snoop for Firefox",
+    "version": "1.0",
+
+    "description": "Quickly view definitions and pronounciations of selected text",
+
+    "icons" : {
+        "48" : "icons/",
+        "96" : "icons/"
+    },
+
+    "content_scripts" : [
+        {
+            "matches" : ["*"],
+            "js" : ["snoop-firefox.js"]
+        }
+    ]
+}

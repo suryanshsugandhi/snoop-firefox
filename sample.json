@@ -1,0 +1,22 @@
+{
+  "head": {},
+  "def": [
+    {
+      "text": "boilerplate",
+      "pos": "noun",
+      "ts": "ˈbɔɪləpleɪt",
+      "tr": [
+        {
+          "text": "template",
+          "pos": "noun",
+          "syn": [
+            {
+              "text": "templated",
+              "pos": "noun"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
