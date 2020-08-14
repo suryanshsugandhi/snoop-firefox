@@ -50,14 +50,7 @@ function mouseUpSelected() {
         newNode.insertAdjacentElement("afterend",popDiv);
     }     
 
-    //Remove Selection: To avoid extra text selection
-    // if (window.getSelection) {
-    //   window.getSelection().removeAllRanges();
-    // }
-    // else if (document.selection){ 
-    //     document.selection.empty();
-    // }
-
+    // returning selected text
     var selectedText = range.toString();
     if (selectedText && selectedText != "") {
         return selectedText
